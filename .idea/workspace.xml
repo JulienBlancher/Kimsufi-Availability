@@ -28,8 +28,8 @@
       <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.825" vertical-offset="885" max-vertical-offset="1485">
-              <caret line="92" column="111" selection-start-line="92" selection-start-column="93" selection-end-line="92" selection-end-column="111" />
+            <state vertical-scroll-proportion="0.856" vertical-offset="1175" max-vertical-offset="1800">
+              <caret line="114" column="0" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -104,6 +104,7 @@
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="ignore_missing_gitignore" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -204,8 +205,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.825" vertical-offset="885" max-vertical-offset="1485">
-          <caret line="92" column="111" selection-start-line="92" selection-start-column="93" selection-end-line="92" selection-end-column="111" />
+        <state vertical-scroll-proportion="0.856" vertical-offset="1175" max-vertical-offset="1800">
+          <caret line="114" column="0" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
           <folding />
         </state>
       </provider>

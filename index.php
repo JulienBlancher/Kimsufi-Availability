@@ -43,15 +43,25 @@ function getTextBetweenTags($tag, $html, $strict=0)
 	return $out;
 }
 
-$curl_handle=curl_init();
-curl_setopt($curl_handle, CURLOPT_URL,'https://www.kimsufi.com/fr/index.xml');
-curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
-curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Your application name');
-$content = curl_exec($curl_handle);
-curl_close($curl_handle);
+function makeRequest($url)
+{
+	$curl_handle=curl_init();
+	curl_setopt($curl_handle, CURLOPT_URL, $url);
+	curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
+	curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+	$content = curl_exec($curl_handle);
+	curl_close($curl_handle);
+	
+	return $content;
+}
 
-$table = getTextBetweenTags("table", $content);
+
+function sendMail($server)
+{
+	mail("ju.blancher@gmail.com", "DISPO KIMSUFI $server", "https://www.kimsufi.com/fr/index.xml");
+}
+
+$table = getTextBetweenTags("table", makeRequest("https://www.kimsufi.com/fr/index.xml"));
 
 $table_clear = trim(preg_replace('/ +/', ' ', preg_replace('/[^A-Za-z0-9eèéêë€™\-,\. ]/', ' ', urldecode(html_entity_decode(strip_tags($table[0]))))));
 
@@ -88,7 +98,17 @@ var_dump($ks5);
 echo "<br><br>";
 var_dump($ks6);
 
-if (preg_match("/En cours de réapprovisionnement/", $ks1) == true)
-{
-	mail("ju.blancher@gmail.com", "DISPO KIMSUFI KS1", "https://www.kimsufi.com/fr/index.xml\n2258933147KIMSUFI");
-}
+if (preg_match("/En cours de réapprovisionnement/", $ks1) == false)
+	sendMail("ks1");
+else if (preg_match("/En cours de réapprovisionnement/", $ks2) == false)
+	sendMail("ks2");
+else if (preg_match("/En cours de réapprovisionnement/", $ks2ssd) == false)
+	sendMail("ks2ssd");
+else if (preg_match("/En cours de réapprovisionnement/", $ks3) == false)
+	sendMail("ks3");
+else if (preg_match("/En cours de réapprovisionnement/", $ks4) == false)
+	sendMail("ks4");
+else if (preg_match("/En cours de réapprovisionnement/", $ks5) == false)
+	sendMail("ks5");
+else if (preg_match("/En cours de réapprovisionnement/", $ks6) == false)
+	sendMail("ks6");
