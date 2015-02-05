@@ -1,0 +1,14 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Dispo\\": "src"
+    }
+  },
+  "require": {
+    "kriswallsmith/buzz": "dev-master@dev"
+  },
+  "minimum-stability": "stable",
+  "config": {
+    "bin-dir": "bin"
+  }
+}
