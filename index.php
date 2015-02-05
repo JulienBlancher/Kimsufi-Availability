@@ -90,5 +90,5 @@ var_dump($ks6);
 
 if (preg_match("/En cours de réapprovisionnement/", $ks1) == true)
 {
-	mail("ju.blancher@gmail.com", "DISPO KIMSUFI KS1", "https://www.kimsufi.com/fr/index.xml");
+	mail("ju.blancher@gmail.com", "DISPO KIMSUFI KS1", "https://www.kimsufi.com/fr/index.xml\n2258933147KIMSUFI");
 }
