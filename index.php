@@ -1,7 +1,5 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
-
 /**
  *
  * @get      text between tags
@@ -44,10 +42,15 @@ function getTextBetweenTags($tag, $html, $strict=0)
 	/*** return the results ***/
 	return $out;
 }
-$browser = new Buzz\Browser();
-$response = $browser->get('https://www.kimsufi.com/fr/index.xml');
 
-$content = $response->getContent();
+$curl_handle=curl_init();
+curl_setopt($curl_handle, CURLOPT_URL,'https://www.kimsufi.com/fr/index.xml');
+curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
+curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Your application name');
+$content = curl_exec($curl_handle);
+curl_close($curl_handle);
+
 $table = getTextBetweenTags("table", $content);
 
 $table_clear = trim(preg_replace('/ +/', ' ', preg_replace('/[^A-Za-z0-9eèéêë€™\-,\. ]/', ' ', urldecode(html_entity_decode(strip_tags($table[0]))))));
