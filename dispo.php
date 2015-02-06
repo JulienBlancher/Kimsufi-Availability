@@ -41,7 +41,7 @@ $sk['KS-6'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElap
 
 foreach ($sk as $key => $elm)
 {
-	if (!($ret = getAnswer($elm)) || (int)$ret < 2200)
+	if (!($ret = getAnswer($elm)) || (int)$ret < 1800)
 		sendMail($key, (int)$ret, $elm);
 }
 
