@@ -61,6 +61,11 @@ function sendMail($server)
 	mail("ju.blancher@gmail.com", "DISPO KIMSUFI $server", "https://www.kimsufi.com/fr/index.xml");
 }
 
+function availability()
+{
+
+}
+
 $table = getTextBetweenTags("table", makeRequest("https://www.kimsufi.com/fr/index.xml"));
 
 $table_clear = trim(preg_replace('/ +/', ' ', preg_replace('/[^A-Za-z0-9eèéêë€™\-,\. ]/', ' ', urldecode(html_entity_decode(strip_tags($table[0]))))));
@@ -100,15 +105,15 @@ var_dump($ks6);
 
 if (preg_match("/En cours de réapprovisionnement/", $ks1) == false)
 	sendMail("ks1");
-else if (preg_match("/En cours de réapprovisionnement/", $ks2) == false)
+if (preg_match("/En cours de réapprovisionnement/", $ks2) == false)
 	sendMail("ks2");
-else if (preg_match("/En cours de réapprovisionnement/", $ks2ssd) == false)
+if (preg_match("/En cours de réapprovisionnement/", $ks2ssd) == false)
 	sendMail("ks2ssd");
-else if (preg_match("/En cours de réapprovisionnement/", $ks3) == false)
+if (preg_match("/En cours de réapprovisionnement/", $ks3) == false)
 	sendMail("ks3");
-else if (preg_match("/En cours de réapprovisionnement/", $ks4) == false)
+if (preg_match("/En cours de réapprovisionnement/", $ks4) == false)
 	sendMail("ks4");
-else if (preg_match("/En cours de réapprovisionnement/", $ks5) == false)
+if (preg_match("/En cours de réapprovisionnement/", $ks5) == false)
 	sendMail("ks5");
-else if (preg_match("/En cours de réapprovisionnement/", $ks6) == false)
+if (preg_match("/En cours de réapprovisionnement/", $ks6) == false)
 	sendMail("ks6");
