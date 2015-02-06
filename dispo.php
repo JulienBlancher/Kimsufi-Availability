@@ -9,12 +9,13 @@ function makeRequest($url)
 	return $content;
 }
 
-function sendMail($server, $since, $debug = '')
+function notify($server, $since, $debug = '')
 {
 	if (!DEV)
 		mail("ju.blancher@gmail.com", "$server available", "https://www.kimsufi.com/fr/index.xml\n\n$debug");
 	else
 		echo trim($server)." available!! Last: ". floor($since / 60) ." minutes\n";
+	exec('curl -u k4z3QsBl8v9pbmj78Am2bQeseI9IOYRi: -X POST https://api.pushbullet.com/v2/pushes --header \'Content-Type: application/json\' --data-binary \'{"type": "note", "title": "'.$server.' AVAILABLE", "body": "Last '. floor($since / 60) .' minutes\n https://www.kimsufi.com/fr/index.xml"}\'');
 }
 
 /*
@@ -41,8 +42,8 @@ $sk['KS-6'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElap
 
 foreach ($sk as $key => $elm)
 {
-	if (!($ret = getAnswer($elm)) || (int)$ret < 1800)
-		sendMail($key, (int)$ret, $elm);
+	if (!($ret = getAnswer($elm)) || (int)$ret < 10000)
+		notify($key, (int)$ret, $elm);
 }
 
 /*
