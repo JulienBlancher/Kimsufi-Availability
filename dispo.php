@@ -39,7 +39,7 @@ var_dump($servers);
 
 foreach ($servers as $elm)
 {
-	if (strstr($elm->reference, "150sk") && $elm->reference != "150sk21")
+	if (strstr($elm->reference, "150sk") && $elm->reference != "150sk21" && $elm->reference != "150sk41" && $elm->reference != "150sk42")
 	{
 		foreach ($elm->zones as $dispo)
 		{
