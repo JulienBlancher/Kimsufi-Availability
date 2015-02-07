@@ -42,10 +42,12 @@ $servers = json_decode(file_get_contents("https://ws.ovh.com/dedicated/r2/ws.dis
 
 foreach ($servers as $server)
 {
-	if (strstr($server->reference, "150sk") && $server->reference != "150sk21" && $server->reference != "150sk41" && $server->reference != "150sk42")
+	if (strstr($server->reference, "150sk") && $server->reference != "150sk21" && $server->reference != "150sk31" && $server->reference != "150sk41" && $server->reference != "150sk42")
 	{
 		foreach ($server->zones as $dispo)
 		{
+			if (DEV_MODE)
+				echo $server->reference." : ".$dispo->availability."\n";
 			if ($dispo->availability != "unknown" && $dispo->availability != "unavailable")
 				notify($server->reference);
 		}
