@@ -1,15 +1,41 @@
 <?php
 
-define("DEV", true);
+// put your config here
+define("DEV_MODE", true);
 define("MAIL", "ju.blancher@gmail.com");
+define("PUSHBULLET_API_KEY", "k4z3QsBl8v9pbmj78Am2bQeseI9IOYRi"); // empty to disable pushbullet
+// end of config
 
+/**
+ *
+ * Here we notify by mail if we are not in dev mode and by pushbullet notification if it's enabled and cURL is loaded.
+ *
+ * @param        $server
+ * @param string $debug
+ */
 function notify($server, $debug = '')
 {
-	if (!DEV)
+	if (!DEV_MODE)
 		mail(MAIL, "$server available", "https://www.kimsufi.com/fr/index.xml\n\n$debug");
 	else
 		echo trim($server)." available!!\n";
-	exec('curl -u k4z3QsBl8v9pbmj78Am2bQeseI9IOYRi: -X POST https://api.pushbullet.com/v2/pushes --header \'Content-Type: application/json\' --data-binary \'{"type": "note", "title": "'.$server.' AVAILABLE", "body": "Last '. floor($since / 60) .' minutes\n https://www.kimsufi.com/fr/index.xml"}\'');
+
+	if (PUSHBULLET_API_KEY != '' && function_exists('curl_init')) {
+		$pushContent = '{"type": "note", "title": "'.$server.' AVAILABLE", "body": "https://www.kimsufi.com/fr/index.xml"}';
+		$curl = curl_init();
+		curl_setopt( $curl, CURLOPT_URL, "https://api.pushbullet.com/v2/pushes" );
+		curl_setopt( $curl, CURLOPT_USERPWD, PUSHBULLET_API_KEY );
+		curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, "POST" );
+		curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
+			'Content-Type: application/json',
+			'Content-Length: ' . strlen( $pushContent )
+		) );
+		curl_setopt( $curl, CURLOPT_POSTFIELDS, $pushContent );
+		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $curl, CURLOPT_HEADER, false );
+		curl_exec( $curl );
+		curl_close( $curl );
+	}
 }
 
 $servers = json_decode(file_get_contents("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getAvailability2"))->answer->availability;
@@ -26,5 +52,5 @@ foreach ($servers as $server)
 	}
 }
 
-if (DEV)
+if (DEV_MODE)
 	notify("test");
