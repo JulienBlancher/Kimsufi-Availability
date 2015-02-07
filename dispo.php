@@ -9,7 +9,7 @@ function makeRequest($url)
 	return $content;
 }
 
-function notify($server, $since, $debug = '')
+function notify($server, $since = 0, $debug = '')
 {
 	if (!DEV)
 		mail("ju.blancher@gmail.com", "$server available", "https://www.kimsufi.com/fr/index.xml\n\n$debug");
@@ -24,32 +24,59 @@ function notify($server, $since, $debug = '')
  *
  */
 
-function getAnswer($json)
-{
-	preg_match("/answer\":\"(.*)\",\"version/", $json, $matches);
+//
 
-	return (isset($matches[1]) ? $matches[1] : 0);
+$dispo = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getAvailability2?callback=Request.JSONP.request_map.request_0");
+
+preg_match("/Request.JSONP.request_map.request_0\((.*)\);/", $dispo, $json);
+
+//var_dump($json);
+//var_dump(json_decode($json[1]));
+
+$servers = json_decode($json[1])->answer->availability;
+
+var_dump($servers);
+
+foreach ($servers as $elm)
+{
+	if (strstr($elm->reference, "150sk") && $elm->reference != "150sk21")
+	{
+		foreach ($elm->zones as $dispo)
+		{
+			if ($dispo->availability != "unknown")
+				notify($elm->reference);
+		}
+	}
 }
 
-$sk = array();
-$sk['KS-1'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk10%22%7D");
-$sk['KS-2'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk20%22%7D");
-$sk['KS-2.2'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk22%22%7D");
-$sk['KS-3'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk30%22%7D");
-$sk['KS-4'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk40%22%7D");
-$sk['KS-5'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk50%22%7D");
-$sk['KS-6'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk60%22%7D");
+//function getAnswer($json)
+//{
+//	preg_match("/answer\":\"(.*)\",\"version/", $json, $matches);
+//
+//	return (isset($matches[1]) ? $matches[1] : 0);
+//}
 
-foreach ($sk as $key => $elm)
-{
-	if (!($ret = getAnswer($elm)) || (int)$ret < 1800)
-		notify($key, (int)$ret, $elm);
-	file_put_contents("debug", "[".date('Y-m-d H:i:s')."] ".$key." => ".$elm."\n", FILE_APPEND);
-}
+//$sk = array();
+//$sk['KS-1'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk10%22%7D");
+//$sk['KS-2'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk20%22%7D");
+//$sk['KS-2.2'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk22%22%7D");
+//$sk['KS-3'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk30%22%7D");
+//$sk['KS-4'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk40%22%7D");
+//$sk['KS-5'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk50%22%7D");
+//$sk['KS-6'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElapsedTimeSinceLastDelivery?callback=Request.JSONP.request_map.request_1&params=%7B%22gamme%22%3A%22150sk60%22%7D");
+//
+////var_dump($sk);
+//
+//foreach ($sk as $key => $elm)
+//{
+//	if (!($ret = getAnswer($elm)) || (int)$ret < 1800)
+//		notify($key, (int)$ret, $elm);
+//	file_put_contents("debug", "[".date('Y-m-d H:i:s')."] ".$key." => ".$elm."\n", FILE_APPEND);
+//}
 
 if (DEV)
 {
-	notify("test", 0);
+	//notify("test", 0);
 }
 
 /*
