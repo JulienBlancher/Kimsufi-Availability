@@ -42,8 +42,14 @@ $sk['KS-6'] = makeRequest("https://ws.ovh.com/dedicated/r2/ws.dispatcher/getElap
 
 foreach ($sk as $key => $elm)
 {
-	if (!($ret = getAnswer($elm)) || (int)$ret < 10000)
+	if (!($ret = getAnswer($elm)) || (int)$ret < 1800)
 		notify($key, (int)$ret, $elm);
+	file_put_contents("debug", "[".date('Y-m-d H:i:s')."] ".$key." => ".$elm."\n", FILE_APPEND);
+}
+
+if (DEV)
+{
+	notify("test", 0);
 }
 
 /*
