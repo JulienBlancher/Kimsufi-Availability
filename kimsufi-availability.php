@@ -1,9 +1,8 @@
-t
 <?php
 
 // put your config here
-define("DEV_MODE", true);
-define("MAIL", "ju.blancher@gmail.com");
+define("DEV_MODE", false);
+define("MAIL", ""); // empty to disable mail notification
 define("PUSHBULLET_API_KEY", "k4z3QsBl8v9pbmj78Am2bQeseI9IOYRi"); // empty to disable pushbullet
 // end of config
 define("NOTIF_URL", "https://www.kimsufi.com/fr/commande/kimsufi.xml?reference=");
@@ -17,10 +16,10 @@ define("NOTIF_URL", "https://www.kimsufi.com/fr/commande/kimsufi.xml?reference="
  */
 function notify($server, $debug = '')
 {
-	if (!DEV_MODE)
+	if (!DEV_MODE && MAIL != '')
 		mail(MAIL, "$server available", NOTIF_URL.$server);
-	else
-		echo trim($server)." available!!\n";
+	else if (DEV_MODE)
+		echo trim($server)." available\n";
 
 	if (PUSHBULLET_API_KEY != '' && function_exists('curl_init')) {
 		$pushContent = '{"type": "note", "title": "'.$server.' AVAILABLE", "body": "'.NOTIF_URL.$server.'"}';
