@@ -1,3 +1,4 @@
+t
 <?php
 
 // put your config here
@@ -5,6 +6,7 @@ define("DEV_MODE", true);
 define("MAIL", "ju.blancher@gmail.com");
 define("PUSHBULLET_API_KEY", "k4z3QsBl8v9pbmj78Am2bQeseI9IOYRi"); // empty to disable pushbullet
 // end of config
+define("NOTIF_URL", "https://www.kimsufi.com/fr/commande/kimsufi.xml?reference=");
 
 /**
  *
@@ -16,12 +18,12 @@ define("PUSHBULLET_API_KEY", "k4z3QsBl8v9pbmj78Am2bQeseI9IOYRi"); // empty to di
 function notify($server, $debug = '')
 {
 	if (!DEV_MODE)
-		mail(MAIL, "$server available", "https://www.kimsufi.com/fr/index.xml\n\n$debug");
+		mail(MAIL, "$server available", NOTIF_URL.$server);
 	else
 		echo trim($server)." available!!\n";
 
 	if (PUSHBULLET_API_KEY != '' && function_exists('curl_init')) {
-		$pushContent = '{"type": "note", "title": "'.$server.' AVAILABLE", "body": "https://www.kimsufi.com/fr/index.xml"}';
+		$pushContent = '{"type": "note", "title": "'.$server.' AVAILABLE", "body": "'.NOTIF_URL.$server.'"}';
 		$curl = curl_init();
 		curl_setopt( $curl, CURLOPT_URL, "https://api.pushbullet.com/v2/pushes" );
 		curl_setopt( $curl, CURLOPT_USERPWD, PUSHBULLET_API_KEY );
