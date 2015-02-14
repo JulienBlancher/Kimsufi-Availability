@@ -3,7 +3,7 @@
 // put your config here
 define("DEV_MODE", false);
 define("MAIL", ""); // empty to disable mail notification
-define("PUSHBULLET_API_KEY", "k4z3QsBl8v9pbmj78Am2bQeseI9IOYRi"); // empty to disable pushbullet
+define("PUSHBULLET_API_KEY", ""); // empty to disable pushbullet
 // end of config
 define("NOTIF_URL", "https://www.kimsufi.com/fr/commande/kimsufi.xml?reference=");
 
